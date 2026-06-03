@@ -21,47 +21,70 @@ def gerar_auth(payload_str):
     )
 
 
-def get_products():
+def get_products(keyword: str, page=1, limit=20):
+    if not keyword:
+        return []
+
+    page = int(page or 1)
+    limit = int(limit or 20)
+
     query = """
-    {
-    productOfferV2(
-        keyword: "celular",
-        listType: 1,
-        sortType: 5,
-        page: 1,
-        limit: 20
+    query ProductOffer(
+        $keyword: String!,
+        $page: Int!,
+        $limit: Int!
     ) {
-        nodes {
-        itemId
-        productName
-        productLink
-        offerLink
-        imageUrl
-        priceMin
-        priceMax
-        priceDiscountRate
-        sales
-        ratingStar
-        commissionRate
-        sellerCommissionRate
-        shopeeCommissionRate
-        commission
-        shopId
-        shopName
-        shopType
-        periodStartTime
-        periodEndTime
+        productOfferV2(
+            keyword: $keyword,
+            listType: 1,
+            sortType: 5,
+            page: $page,
+            limit: $limit
+        ) {
+            nodes {
+                itemId
+                productName
+                productLink
+                offerLink
+                imageUrl
+                priceMin
+                priceMax
+                priceDiscountRate
+                sales
+                ratingStar
+                commissionRate
+                commission
+                shopName
+                shopType
+                periodStartTime
+                periodEndTime
+            }
+            pageInfo {
+                page
+                limit
+                hasNextPage
+            }
         }
-        pageInfo { page limit hasNextPage }
-    }
     }
     """
 
-    body = json.dumps({"query": query}, separators=(",", ":"))
+    body = {
+        "query": query,
+        "variables": {
+            "keyword": keyword,
+            "page": page,
+            "limit": limit
+        }
+    }
+
+    body_json = json.dumps(body, separators=(",", ":"))
     resp = requests.post(
         config["URL"],
-        headers={"Content-Type": "application/json", "Authorization": gerar_auth(body)},
-        data=body
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": gerar_auth(body_json)
+        },
+        data=body_json
     )
-    response = resp.json()
-    return response["data"]["productOfferV2"]
+
+    return resp.json()

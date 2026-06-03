@@ -5,7 +5,7 @@ import os
 
 try:
     client = MongoClient(os.getenv("MONGO_DB"))
-    db = client["FirstDatabase"]
-    users = db["users"]
+    db = client["shopee_integration"]
+    products = db["products"]
 except Exception as ex:
     print(ex)

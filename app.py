@@ -1,13 +1,18 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from core.shopee import get_products
-from database import users
 
 app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-    usuarios = list(users.find({}, {"_id": 0}))
-    return render_template("index.html", resp=usuarios)
+@app.route("/", methods=["GET", "POST"])
+def main():
+    products = None
+    if request.method == "POST":
+        keyword = request.form.get("keyword")
+        page = request.form.get("page", 1)
+        limit = request.form.get("limit", 20)
+        if keyword:
+            products = get_products(keyword=keyword, page=page, limit=limit)
+    return render_template("index.html", products=products)
 
 if __name__ == "__main__":
     app.run(debug=True)

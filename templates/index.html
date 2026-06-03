@@ -1,5 +1,17 @@
-{% extends "base.html" %} {% block title %} Home {% endblock %} {% block
-content%}
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+{% block content%}
 <h2>Página Inicial</h2>
-<p>Bem-vindo ao sistema!</p>
-{{ resp.name }} {% endblock %}
+<form method="post">
+    <input type="text" name="keyword" placeholder="Digite a palavre chave" required />
+    <input type="number" name="page" placeholder="Informe a página" />
+    <input type="number" name="limit" placeholder="Informe o limite" />
+    <button type="submit">Buscar</button>
+</form>
+{% if products %}
+<p>Possível próxima página?: {{ products["data"]["productOfferV2"]["pageInfo"]["hasNextPage"] }}</p>
+{% for product in products["data"]["productOfferV2"]["nodes"] %}
+    <pre>{{ product | tojson(indent=2) | safe }}</pre>
+{% endfor %}
+{% endif %}
+{% endblock %}
