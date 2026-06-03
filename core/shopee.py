@@ -21,7 +21,7 @@ def gerar_auth(payload_str):
     )
 
 
-def get_products(keyword: str, page=1, limit=20):
+def get_products(keyword: str, page=1, limit=2):
     if not keyword:
         return []
 

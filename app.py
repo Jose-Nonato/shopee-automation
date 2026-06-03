@@ -1,18 +1,15 @@
-from flask import Flask, render_template, request
 from core.shopee import get_products
+from core.gemini import product_information
+from core.telegram import send_message
 
-app = Flask(__name__)
+keyword = input("Informe o tipo de produto desejado: ")
 
-@app.route("/", methods=["GET", "POST"])
-def main():
-    products = None
-    if request.method == "POST":
-        keyword = request.form.get("keyword")
-        page = request.form.get("page", 1)
-        limit = request.form.get("limit", 20)
-        if keyword:
-            products = get_products(keyword=keyword, page=page, limit=limit)
-    return render_template("index.html", products=products)
+response = get_products(keyword=keyword)
+page_info = response["data"]["productOfferV2"]["pageInfo"]
+products = response["data"]["productOfferV2"]["nodes"]
 
-if __name__ == "__main__":
-    app.run(debug=True)
+for product in products:
+    product_info = product_information(product)
+    print(product_info)
+    status = send_message(message=product_info)
+    print(status)
