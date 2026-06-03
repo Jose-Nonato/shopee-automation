@@ -14,4 +14,4 @@ def send_message(message):
         "text": message
     }
     response = requests.post(url, data=payload)
-    return response.status_code
+    return response.text

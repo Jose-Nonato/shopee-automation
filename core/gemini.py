@@ -14,7 +14,6 @@ Você irá receber um dicionário de produtos.
 Gere um texto chamativo e formatado para ser compartilhado em um grupo de Telegram de promoções.
 
 Regras:
-- Entre 50 a 70 caracteres
 - Foque em custo-benefício e praticidade
 - Inclua uma piada leve
 - Não inclua explicações
